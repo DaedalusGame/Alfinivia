@@ -31,7 +31,6 @@ public class BreakSpeedHandler {
         IBlockState state = world.getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
-        //if(!world.isRemote)
         for (BreakSpeedInfo info : REGISTRY) {
             IBlockMatcher matcher = info.blockMatchers.get(state.getBlock());
             if(matcher == null || !matcher.applies(world,pos,state))
@@ -40,8 +39,6 @@ public class BreakSpeedHandler {
                 continue;
             event.setNewSpeed(info.getMultiplier(player,world,pos) * event.getNewSpeed());
         }
-
-        System.out.println("current breakspeed:"+event.getNewSpeed());
     }
 
     public static class BreakSpeedInfo
