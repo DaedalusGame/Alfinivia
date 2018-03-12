@@ -5,6 +5,7 @@ import alfinivia.util.IBlockMatcher;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 public class BreakSpeedHandler {
     public static ArrayList<BreakSpeedInfo> REGISTRY = new ArrayList<>();
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBreak(PlayerEvent.BreakSpeed event)
     {
         EntityPlayer player = event.getEntityPlayer();
@@ -29,6 +31,7 @@ public class BreakSpeedHandler {
         IBlockState state = world.getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
+        //if(!world.isRemote)
         for (BreakSpeedInfo info : REGISTRY) {
             IBlockMatcher matcher = info.blockMatchers.get(state.getBlock());
             if(matcher == null || !matcher.applies(world,pos,state))
@@ -37,6 +40,8 @@ public class BreakSpeedHandler {
                 continue;
             event.setNewSpeed(info.getMultiplier(player,world,pos) * event.getNewSpeed());
         }
+
+        System.out.println("current breakspeed:"+event.getNewSpeed());
     }
 
     public static class BreakSpeedInfo
@@ -51,7 +56,7 @@ public class BreakSpeedHandler {
             this.toolFilter = toolFilter;
         }
 
-        public void setAttribute(RangedAttribute attribute) {
+        public void setAttribute(IAttribute attribute) {
             this.attribute = attribute;
         }
 
@@ -64,7 +69,7 @@ public class BreakSpeedHandler {
         }
 
         private Ingredient toolFilter;
-        private RangedAttribute attribute;
+        private IAttribute attribute;
         private float multiplier;
         private IBlockSpeedFunction function;
 

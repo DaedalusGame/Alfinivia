@@ -12,6 +12,7 @@ import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import net.minecraft.block.Block;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public class BreakSpeedBuilder {
     private String className;
     private HashMap<Block, IBlockMatcher> blockMatchers = new HashMap<>();
     private IIngredient tools;
-    private RangedAttribute attribute;
+    private IAttribute attribute;
     private float multiplier = 1.0f;
     private IBlockSpeedFunction function;
 
@@ -69,7 +70,7 @@ public class BreakSpeedBuilder {
             return;
         }
 
-        attribute = new RangedAttribute(null,"break."+className,defaultValue,minValue,maxValue);
+        attribute = new RangedAttribute(null,"break."+className,defaultValue,minValue,maxValue).setShouldWatch(true);
     }
 
     @ZenMethod
@@ -132,7 +133,8 @@ public class BreakSpeedBuilder {
         BreakSpeedHandler.BreakSpeedInfo info = new BreakSpeedHandler.BreakSpeedInfo();
 
         info.setBlockMatchers(blockMatchers);
-        info.setToolFilter(new IngredientCraftTweaker(tools));
+        if(tools != null)
+            info.setToolFilter(new IngredientCraftTweaker(tools));
         info.setMultiplier(multiplier);
         info.setFunction(function);
         if(attribute != null) {
