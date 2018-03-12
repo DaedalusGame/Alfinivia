@@ -21,7 +21,7 @@ public class EntityMilking {
 
     @ZenMethod
     public static void add(@NotNull IIngredient input, @NotNull IEntityDefinition entity, IItemStack output, boolean needsSneaking) {
-        CraftTweakerAPI.apply(new Add(new MilkingHandler.MilkingInfo(new IngredientCraftTweaker(input),IEntityFunction.getIEntityDefinition(entity), InputHelper.toStack(output),needsSneaking),entity.getId()));
+        CraftTweakerAPI.apply(new Add(new MilkingHandler.MilkingInfo(new IngredientCraftTweaker(input),IEntityFunction.getEntity(entity), InputHelper.toStack(output),needsSneaking),entity.getId()));
     }
 
     @ZenMethod
@@ -31,7 +31,7 @@ public class EntityMilking {
 
     @ZenMethod
     public static void add(@NotNull IIngredient input, @NotNull IEntityDefinition entity, IMilkFunction output, boolean needsSneaking) {
-        CraftTweakerAPI.apply(new Add(new MilkingHandler.MilkingInfo(new IngredientCraftTweaker(input), IEntityFunction.getIEntityDefinition(entity), output,needsSneaking),entity.getId()));
+        CraftTweakerAPI.apply(new Add(new MilkingHandler.MilkingInfo(new IngredientCraftTweaker(input), IEntityFunction.getEntity(entity), output,needsSneaking),entity.getId()));
     }
 
     @ZenMethod

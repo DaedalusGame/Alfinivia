@@ -138,8 +138,7 @@ public class BreakSpeedBuilder {
         info.setMultiplier(multiplier);
         info.setFunction(function);
         if(attribute != null) {
-            info.setAttribute(attribute);
-            Attributes.REQUESTED_ATTRIBUTES.add(attribute);
+            info.setAttribute(Attributes.request(attribute));
         }
 
         BreakSpeedHandler.REGISTRY.add(info);

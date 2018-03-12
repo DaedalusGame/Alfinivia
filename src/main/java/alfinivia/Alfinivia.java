@@ -1,9 +1,6 @@
 package alfinivia;
 
-import alfinivia.handlers.Attributes;
-import alfinivia.handlers.BreakSpeedHandler;
-import alfinivia.handlers.LiquidInteractionHandler;
-import alfinivia.handlers.MilkingHandler;
+import alfinivia.handlers.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +26,7 @@ public class Alfinivia
         proxy.preInit();
         MinecraftForge.EVENT_BUS.register(new Attributes());
         MinecraftForge.EVENT_BUS.register(new BreakSpeedHandler());
+        MinecraftForge.EVENT_BUS.register(new DamageHandler());
         MinecraftForge.EVENT_BUS.register(new LiquidInteractionHandler());
         MinecraftForge.EVENT_BUS.register(new MilkingHandler());
     }
