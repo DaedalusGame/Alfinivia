@@ -1,0 +1,16 @@
+[
+{
+  "modid": "alfinivia",
+  "name": "Alfinivia",
+  "description": "A collection of tweaks for the aspiring modpack author.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["BordListian"],
+  "credits": "Forge",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
