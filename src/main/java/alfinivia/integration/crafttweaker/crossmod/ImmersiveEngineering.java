@@ -2,15 +2,20 @@ package alfinivia.integration.crafttweaker.crossmod;
 
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.crafting.IngredientStack;
+import blusunrize.immersiveengineering.api.tool.BelljarHandler;
+import blusunrize.immersiveengineering.api.tool.BelljarHandler.FluidFertilizerHandler;
+import blusunrize.immersiveengineering.api.tool.BelljarHandler.ItemFertilizerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler;
 import blusunrize.immersiveengineering.api.tool.ChemthrowerHandler.ChemthrowerEffect;
 import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.common.util.compat.crafttweaker.CraftTweakerHelper;
+import com.blamejared.mtlib.helpers.InputHelper;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotionEffect;
@@ -21,6 +26,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -28,11 +34,13 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 
 @ModOnly("immersiveengineering")
 @ZenClass(ImmersiveEngineering.clazz)
@@ -87,6 +95,48 @@ public class ImmersiveEngineering {
         CraftTweakerAPI.apply(new AddRailgunBullet(ApiUtils.createIngredientStack(CraftTweakerHelper.toObject(item)),properties));
     }
 
+    @ZenMethod
+    public static void addLiquidFertilizer(ILiquidStack liquid, float multiplier) {
+        FluidFertilizerHandler handler = new FluidFertilizerHandler() {
+            @Override
+            public boolean isValid(@Nullable FluidStack fluidStack) {
+                return liquid.matches(new MCLiquidStack(fluidStack));
+            }
+
+            @Override
+            public float getGrowthMultiplier(FluidStack fluidStack, ItemStack itemStack, ItemStack itemStack1, TileEntity tileEntity) {
+                return multiplier;
+            }
+        };
+        CraftTweakerAPI.apply(new AddFluidFertilizer(handler));
+    }
+
+    @ZenMethod
+    public static void removeLiquidFertilizer(ILiquidStack liquid) {
+        CraftTweakerAPI.apply(new RemoveFluidFertilizer(InputHelper.toFluid(liquid)));
+    }
+
+    @ZenMethod
+    public static void addItemFertilizer(IIngredient item, float multiplier) {
+        ItemFertilizerHandler handler = new ItemFertilizerHandler() {
+            @Override
+            public boolean isValid(ItemStack itemStack) {
+                return item.matches(CraftTweakerMC.getIItemStack(itemStack));
+            }
+
+            @Override
+            public float getGrowthMultiplier(ItemStack itemStack, ItemStack itemStack1, ItemStack itemStack2, TileEntity tileEntity) {
+                return multiplier;
+            }
+        };
+        CraftTweakerAPI.apply(new AddItemFertilizer(handler));
+    }
+
+    @ZenMethod
+    public static void removeItemFertilizer(IItemStack item) {
+        CraftTweakerAPI.apply(new RemoveItemFertilizer(InputHelper.toStack(item)));
+    }
+
     public static class AddChemthrowerEffect implements IAction
     {
         Fluid fluid;
@@ -134,6 +184,84 @@ public class ImmersiveEngineering {
         @Override
         public String describe() {
             return "adding railgun bullet";
+        }
+    }
+
+    public static class AddFluidFertilizer implements IAction
+    {
+        FluidFertilizerHandler handler;
+
+        public AddFluidFertilizer(FluidFertilizerHandler handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public void apply() {
+            BelljarHandler.registerFluidFertilizer(handler);
+        }
+
+        @Override
+        public String describe() {
+            return "Adding fluid fertilizer";
+        }
+    }
+
+    public static class RemoveFluidFertilizer implements IAction
+    {
+        FluidStack fluid;
+
+        public RemoveFluidFertilizer(FluidStack fluid) {
+            this.fluid = fluid;
+        }
+
+        @Override
+        public void apply() {
+            HashSet<FluidFertilizerHandler> set = ReflectionHelper.getPrivateValue(BelljarHandler.class,null,"fluidFertilizers");
+            set.removeIf(handler -> handler.isValid(fluid));
+        }
+
+        @Override
+        public String describe() {
+            return "Removing all fluid fertilizers that match "+fluid.toString();
+        }
+    }
+
+    public static class AddItemFertilizer implements IAction
+    {
+        ItemFertilizerHandler handler;
+
+        public AddItemFertilizer(ItemFertilizerHandler handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public void apply() {
+            BelljarHandler.registerItemFertilizer(handler);
+        }
+
+        @Override
+        public String describe() {
+            return "Adding item fertilizer";
+        }
+    }
+
+    public static class RemoveItemFertilizer implements IAction
+    {
+        ItemStack stack;
+
+        public RemoveItemFertilizer(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        @Override
+        public void apply() {
+            HashSet<ItemFertilizerHandler> set = ReflectionHelper.getPrivateValue(BelljarHandler.class,null,"itemFertilizers");
+            set.removeIf(handler -> handler.isValid(stack));
+        }
+
+        @Override
+        public String describe() {
+            return "Removing all item fertilizers that match "+stack.getDisplayName();
         }
     }
 
