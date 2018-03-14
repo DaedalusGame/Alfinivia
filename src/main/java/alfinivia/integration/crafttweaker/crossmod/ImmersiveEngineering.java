@@ -97,6 +97,11 @@ public class ImmersiveEngineering {
 
     @ZenMethod
     public static void addLiquidFertilizer(ILiquidStack liquid, float multiplier) {
+        addLiquidFertilizer(liquid,IFluidFertilizerMultiplier.byNumber(multiplier));
+    }
+
+    @ZenMethod
+    public static void addLiquidFertilizer(ILiquidStack liquid, IFluidFertilizerMultiplier multiplier) {
         FluidFertilizerHandler handler = new FluidFertilizerHandler() {
             @Override
             public boolean isValid(@Nullable FluidStack fluidStack) {
@@ -104,8 +109,8 @@ public class ImmersiveEngineering {
             }
 
             @Override
-            public float getGrowthMultiplier(FluidStack fluidStack, ItemStack itemStack, ItemStack itemStack1, TileEntity tileEntity) {
-                return multiplier;
+            public float getGrowthMultiplier(FluidStack fertilizer, ItemStack seed, ItemStack soil, TileEntity tileEntity) {
+                return multiplier.getMultiplier(new MCLiquidStack(fertilizer),CraftTweakerMC.getIItemStack(seed),CraftTweakerMC.getIItemStack(soil));
             }
         };
         CraftTweakerAPI.apply(new AddFluidFertilizer(handler));
@@ -118,6 +123,11 @@ public class ImmersiveEngineering {
 
     @ZenMethod
     public static void addItemFertilizer(IIngredient item, float multiplier) {
+        addItemFertilizer(item,IItemFertilizerMultiplier.byNumber(multiplier));
+    }
+
+    @ZenMethod
+    public static void addItemFertilizer(IIngredient item, IItemFertilizerMultiplier multiplier) {
         ItemFertilizerHandler handler = new ItemFertilizerHandler() {
             @Override
             public boolean isValid(ItemStack itemStack) {
@@ -125,8 +135,8 @@ public class ImmersiveEngineering {
             }
 
             @Override
-            public float getGrowthMultiplier(ItemStack itemStack, ItemStack itemStack1, ItemStack itemStack2, TileEntity tileEntity) {
-                return multiplier;
+            public float getGrowthMultiplier(ItemStack fertilizer, ItemStack seed, ItemStack soil, TileEntity tileEntity) {
+                return multiplier.getMultiplier(CraftTweakerMC.getIItemStack(fertilizer),CraftTweakerMC.getIItemStack(seed),CraftTweakerMC.getIItemStack(soil));
             }
         };
         CraftTweakerAPI.apply(new AddItemFertilizer(handler));
