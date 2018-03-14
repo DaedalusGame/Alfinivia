@@ -8,6 +8,7 @@ import blusunrize.immersiveengineering.api.tool.RailgunHandler;
 import blusunrize.immersiveengineering.common.util.compat.crafttweaker.CraftTweakerHelper;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -33,6 +34,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import javax.annotation.Nullable;
 
+@ModOnly("immersiveengineering")
 @ZenClass(ImmersiveEngineering.clazz)
 @ZenRegister
 public class ImmersiveEngineering {

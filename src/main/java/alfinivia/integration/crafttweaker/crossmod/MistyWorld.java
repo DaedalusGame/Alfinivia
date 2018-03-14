@@ -3,6 +3,7 @@ package alfinivia.integration.crafttweaker.crossmod;
 import com.blamejared.mtlib.helpers.InputHelper;
 import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
+import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.block.IBlockDefinition;
 import crafttweaker.api.item.IItemStack;
@@ -14,6 +15,7 @@ import ru.liahim.mist.api.registry.IMistHarvest;
 import ru.liahim.mist.api.registry.MistRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
 
+@ModOnly("mist")
 @ZenClass(MistyWorld.clazz)
 @ZenRegister
 public class MistyWorld {

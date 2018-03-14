@@ -2,15 +2,14 @@ package alfinivia.integration.crafttweaker.crossmod;
 
 import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.entity.IEntityLivingBase;
+import crafttweaker.api.entity.IEntity;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 
 @ModOnly("immersiveengineering")
-@ZenClass("mods.alfinivia.IChemEntityEffect")
+@ZenClass("mods.alfinivia.IBulletFired")
 @ZenRegister
-public interface IChemEntityEffect {
-    void apply(IEntityLivingBase target, IPlayer shooter, IItemStack thrower, ILiquidStack fluid);
+public interface IBulletFired {
+    void apply(IPlayer shooter, IItemStack cartridge, IEntity projectile, boolean charged);
 }
