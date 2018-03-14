@@ -13,6 +13,8 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.HashSet;
+
 @ZenClass(DamageBuilder.clazz)
 @ZenRegister
 public class DamageBuilder {
@@ -27,7 +29,7 @@ public class DamageBuilder {
     private String className;
     private IEntityFunction entityMatch;
     private IEntityFunction sourceMatch;
-    private String damageSource;
+    private HashSet<String> damageSource = new HashSet<>();
     private IDamageFunction function;
     private IAttribute attribute;
 
@@ -48,7 +50,7 @@ public class DamageBuilder {
 
     @ZenMethod
     public void matchDamageSource(String damageSource) {
-        this.damageSource = damageSource;
+        this.damageSource.add(damageSource);
     }
 
     @ZenMethod
@@ -99,7 +101,7 @@ public class DamageBuilder {
 
     public void buildInternal()
     {
-        if(entityMatch == null || damageSource == null || function == null)
+        if(entityMatch == null || damageSource.size() == 0 || function == null)
             return;
         DamageHandler.DamageInfo info = new DamageHandler.DamageInfo(entityMatch,function,damageSource);
         info.setSourceMatch(sourceMatch);
