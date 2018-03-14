@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import ru.liahim.mist.api.registry.IMistHarvest;
 import ru.liahim.mist.api.registry.MistRegistry;
 import stanhebben.zenscript.annotations.ZenClass;
+import stanhebben.zenscript.annotations.ZenMethod;
 
 @ModOnly("mist")
 @ZenClass(MistyWorld.clazz)
@@ -21,16 +22,19 @@ import stanhebben.zenscript.annotations.ZenClass;
 public class MistyWorld {
     public static final String clazz = "mods.alfinivia.MistyWorld";
 
+    @ZenMethod
     public static void addCompostable(IItemStack stack)
     {
         CraftTweakerAPI.apply(new AddCompostable(InputHelper.toStack(stack)));
     }
 
+    @ZenMethod
     public static void addHarvestType(IBlockDefinition block, int min, int max)
     {
         addHarvestType((Block)block.getInternal(),min,max);
     }
 
+    @ZenMethod
     public static void addHarvestType(String block, int min, int max)
     {
         addHarvestType(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(block)),min,max);
