@@ -45,8 +45,13 @@ public class LiquidInteractionHandler {
     private FluidStack getFluidAtLocation(World world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        if (block instanceof IFluidBlock)
-            return ((IFluidBlock) block).drain(world, pos, false);
+        if (block instanceof IFluidBlock) {
+            IFluidBlock fluidBlock = (IFluidBlock) block;
+            FluidStack fluid = fluidBlock.drain(world, pos, false);
+            if(fluid == null)
+                fluid = new FluidStack(fluidBlock.getFluid(),1); //Match for fluidstack with size 2 for sourceblock only!
+            return fluid;
+        }
         if (state.getMaterial() == Material.WATER)
             return new FluidStack(FluidRegistry.WATER,1000);
         if (state.getMaterial() == Material.LAVA)
