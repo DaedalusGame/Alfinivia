@@ -16,6 +16,8 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -92,6 +94,12 @@ public class BreakSpeedBuilder {
     public void addBlock(IBlockDefinition block, int meta)
     {
         addBlockInternal((Block)block.getInternal(),meta);
+    }
+
+    @ZenMethod
+    public void addBlock(String block, int meta)
+    {
+        addBlockInternal(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(block)),meta);
     }
 
     public void addBlockInternal(Block block, int meta)

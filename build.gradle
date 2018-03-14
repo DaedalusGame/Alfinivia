@@ -15,7 +15,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "0.2"
+version = "0.4"
 group= "alfinivia" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Alfinivia"
 
@@ -39,7 +39,7 @@ repositories {
 dependencies {
 	deobfCompile "mezz.jei:jei_1.12.2:4.8.3.128"
     deobfCompile "com.blamejared:MTLib:3.+"
-	compile files('libs/')
+    compile files('libs/')
 }
 
 task deobfJar(type: Jar) {
