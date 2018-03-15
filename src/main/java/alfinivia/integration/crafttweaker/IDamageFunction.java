@@ -29,6 +29,6 @@ public interface IDamageFunction {
     @ZenMethod
     static IDamageFunction threshold(float lowerbound)
     {
-        return (entity,amount) -> amount > lowerbound ? amount : 0;
+        return (entity,amount) -> amount >= lowerbound ? amount : 0;
     }
 }

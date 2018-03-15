@@ -5,6 +5,7 @@ import alfinivia.integration.crafttweaker.IEntityFunction;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,11 +18,25 @@ public class DamageHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onHurt(LivingHurtEvent event) {
-        EntityLivingBase entity = event.getEntityLiving();
-        DamageSource source = event.getSource();
-        float amount = event.getAmount();
+        float amount = getModifiedDamage(event.getEntityLiving(), event.getSource(), event.getAmount());
+        event.setAmount(amount);
+        if(amount == 0)
+            event.setCanceled(true);
+    }
 
-        REGISTRY.stream().filter(info -> info.matches(entity, source)).forEach(info -> event.setAmount(info.function.getDamage(CraftTweakerMC.getIEntityLivingBase(entity), amount)));
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onAttack(LivingAttackEvent event)
+    {
+        if(!event.isCanceled() && getModifiedDamage(event.getEntityLiving(), event.getSource(), event.getAmount()) == 0)
+            event.setCanceled(true);
+    }
+
+    public float getModifiedDamage(EntityLivingBase entity, DamageSource source, float amount) {
+        for (DamageInfo info : REGISTRY) {
+            if(info.matches(entity, source))
+                amount = info.function.getDamage(CraftTweakerMC.getIEntityLivingBase(entity), amount);
+        }
+        return amount;
     }
 
     public static class DamageInfo {
