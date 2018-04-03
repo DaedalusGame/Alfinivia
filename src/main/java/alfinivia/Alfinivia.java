@@ -1,8 +1,12 @@
 package alfinivia;
 
 import alfinivia.handlers.*;
+import alfinivia.integration.crafttweaker.crossmod.TwilightForest;
+import alfinivia.integration.crafttweaker.crossmod.Vanilla;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -29,6 +33,11 @@ public class Alfinivia
         MinecraftForge.EVENT_BUS.register(new DamageHandler());
         MinecraftForge.EVENT_BUS.register(new LiquidInteractionHandler());
         MinecraftForge.EVENT_BUS.register(new MilkingHandler());
+        MinecraftForge.EVENT_BUS.register(new GenerationHandler());
+
+        Vanilla.initialize();
+        if(Loader.isModLoaded("twilightforest"))
+            TwilightForest.initialize();
     }
 
     @EventHandler
